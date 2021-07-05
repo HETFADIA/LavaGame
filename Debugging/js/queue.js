@@ -25,13 +25,20 @@ class Queue {
         return this.items[this.tailIndex-1]
     }
 
+    empty(){
+      return this.tailIndex==this.headIndex;
+    }
+
     get length() {
       return this.tailIndex - this.headIndex;
     }
 
-    
 }
 var queue= new Queue()
+console.log("is queue empty",queue.empty())
+queue.enqueue(4)
+queue.dequeue()
+console.log("is queue empty",queue.empty())
 for(var i=0;i<1e5;i++){
     queue.enqueue(i);
 }
@@ -45,3 +52,4 @@ for(var i=0;i<9*1e4;i++){
 console.log(queue.peek())
 console.log(queue.back())
 console.log(queue.length)
+console.log("is queue empty",queue.empty())
