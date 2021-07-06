@@ -1,5 +1,6 @@
 var inf=Infinity
 var mp={}
+var exit=[]
 const min = (a,b)=>{
     return Math.min(a,b)
 }
@@ -109,12 +110,13 @@ function bfs_a(x,y,dp,s,mp){
                 if(!([a+1,b] in mp)) mp[[a+1,b]]=[a,b];
                 if(!([a,b-1] in mp)) mp[[a,b-1]]=[a,b];
                 if(!([a,b+1] in mp)) mp[[a,b+1]]=[a,b];
-                console.log(mp)
+                
                 visited[a][b]=true;
                 if(a==0 || b==0 || a==n-1 || b==m-1)
                 {
+                    exit=[a,b]
                     s[a][b]='E';
-                    console.log(a,b,n,m,"return")
+                    
                     return true;
                 }
             }
@@ -122,6 +124,22 @@ function bfs_a(x,y,dp,s,mp){
     }
     
     return false;
+}
+function findpath(mp,s,x,y){
+    a=exit[0]
+    b=exit[1]
+    v=[[a,b]]
+
+    while(a!=x || b!=y){
+        temp=mp[[a,b]]
+        p=temp[0]
+        q=temp[1]
+        v.push([p,q])
+        a=p;
+        b=q;
+    }
+    v.reverse()
+    return v;
 }
 for(let tcs=0;tcs<1;tcs++){
     var n=5;
@@ -150,6 +168,14 @@ for(let tcs=0;tcs<1;tcs++){
     
     bfs_monster(monsters,dp,s)
     
-    bfs_a(astart,bstart,dp,s,mp)
-    console.log(mp)
+    var path=bfs_a(astart,bstart,dp,s,mp)
+    
+    if(path)
+    {
+        v=findpath(mp,s,astart,bstart)
+        console.log(v)
+    }
+    else{
+        console.log("path does not exist")
+    }
 }
