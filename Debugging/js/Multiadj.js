@@ -53,8 +53,11 @@ function matrix(n,m,initialize=0){
     }
     return arr;
 }
+diagonal=1
 function adj(a,b){
+    if(diagonal==0)
     return [[a-1,b],[a+1,b],[a,b-1],[a,b+1]]
+    return [[a-1,b],[a+1,b],[a,b-1],[a,b+1],[a-1,b-1],[a-1,b+1],[a+1,b-1],[a+1,b+1]]
 }
 function bfs_monster(monsters,dp,s){
     n=dp.length;m=dp[0].length
@@ -79,7 +82,7 @@ function bfs_monster(monsters,dp,s){
                 dp[a][b]=lvl
                 visited[a][b]=true;
                 for(var [a1,b1] of adj(a,b)){
-                    // console.log(visited[a1][b1])
+                    
                     if(0<=a1 && a1<n && 0<=b1 && b1<m && !visited[a1][b1] && s[a1][b1]!='#') q.enqueue([a1,b1])
                 }
                 // if(a-1>=0 && !visited[a-1][b] && s[a-1][b]!='#') q.enqueue([a-1,b]);
@@ -109,9 +112,9 @@ function bfs_a(x,y,dp,s,mp){
             if(a>=0 && b>=0 && a<n && b<m && !visited[a][b] && dp[a][b]>lvl && s[a][b]!='#')
             {
                 dp[a][b]=min(dp[a][b],lvl);
-                console.log(a,b,adj(a,b))
+                
                 for(var [a1,b1] of adj(a,b)){
-                    console.log(a1,b1)
+                    
                     q.enqueue([a1,b1])
                 }
                 // q.enqueue([a-1,b]);
@@ -119,10 +122,10 @@ function bfs_a(x,y,dp,s,mp){
                 // q.enqueue([a+1,b]);
                 // q.enqueue([a,b+1]);
                 
-                for(var [a1,b1] in adj(a,b)){
-                    console.log("line 121",a1,b1)
+                for(var [a1,b1] of adj(a,b)){
+                    
                     if(!([a1,b1] in mp)){
-                        console.log("line 121",a1,b1)
+                        
                         mp[[a1,b1]]=[a,b]
                     }
                 }
@@ -137,7 +140,7 @@ function bfs_a(x,y,dp,s,mp){
                 {
                     exit=[a,b]
                     s[a][b]='E';
-                    console.log('hi')
+                    
                     return true;
                 }
             }
@@ -180,7 +183,7 @@ function path(n,m,s){
     }
     
     bfs_monster(monsters,dp,s)
-    // console.log(dp)
+    console.log(dp)
     var path=bfs_a(astart,bstart,dp,s,mp)
     
     if(path)
