@@ -53,7 +53,9 @@ function matrix(n,m,initialize=0){
     }
     return arr;
 }
-
+function adj(a,b){
+    return [[a-1,b],[a+1,b],[a,b-1],[a,b+1]]
+}
 function bfs_monster(monsters,dp,s){
     n=dp.length;m=dp[0].length
     visited=matrix(n,m)
@@ -76,10 +78,14 @@ function bfs_monster(monsters,dp,s){
             if(dp[a][b]>lvl){
                 dp[a][b]=lvl
                 visited[a][b]=true;
-                if(a-1>=0 && !visited[a-1][b] && s[a-1][b]!='#') q.enqueue([a-1,b]);
-                if(b-1>=0 && !visited[a][b-1] && s[a][b-1]!='#') q.enqueue([a,b-1]);
-                if(a+1<n && !visited[a+1][b] && s[a+1][b]!='#') q.enqueue([a+1,b]);
-                if(b+1<m && !visited[a][b+1] && s[a][b+1]!='#') q.enqueue([a,b+1]);
+                for(var [a1,b1] of adj(a,b)){
+                    // console.log(visited[a1][b1])
+                    if(0<=a1 && a1<n && 0<=b1 && b1<m && !visited[a1][b1] && s[a1][b1]!='#') q.enqueue([a1,b1])
+                }
+                // if(a-1>=0 && !visited[a-1][b] && s[a-1][b]!='#') q.enqueue([a-1,b]);
+                // if(b-1>=0 && !visited[a][b-1] && s[a][b-1]!='#') q.enqueue([a,b-1]);
+                // if(a+1<n && !visited[a+1][b] && s[a+1][b]!='#') q.enqueue([a+1,b]);
+                // if(b+1<m && !visited[a][b+1] && s[a][b+1]!='#') q.enqueue([a,b+1]);
             }
         }
     }
@@ -103,21 +109,35 @@ function bfs_a(x,y,dp,s,mp){
             if(a>=0 && b>=0 && a<n && b<m && !visited[a][b] && dp[a][b]>lvl && s[a][b]!='#')
             {
                 dp[a][b]=min(dp[a][b],lvl);
-                q.enqueue([a-1,b]);
-                q.enqueue([a,b-1]);
-                q.enqueue([a+1,b]);
-                q.enqueue([a,b+1]);
-                if(!([a-1,b] in mp)) mp[[a-1,b]]=[a,b];
-                if(!([a+1,b] in mp)) mp[[a+1,b]]=[a,b];
-                if(!([a,b-1] in mp)) mp[[a,b-1]]=[a,b];
-                if(!([a,b+1] in mp)) mp[[a,b+1]]=[a,b];
+                console.log(a,b,adj(a,b))
+                for(var [a1,b1] of adj(a,b)){
+                    console.log(a1,b1)
+                    q.enqueue([a1,b1])
+                }
+                // q.enqueue([a-1,b]);
+                // q.enqueue([a,b-1]);
+                // q.enqueue([a+1,b]);
+                // q.enqueue([a,b+1]);
+                
+                for(var [a1,b1] in adj(a,b)){
+                    console.log("line 121",a1,b1)
+                    if(!([a1,b1] in mp)){
+                        console.log("line 121",a1,b1)
+                        mp[[a1,b1]]=[a,b]
+                    }
+                }
+                // if(!([a-1,b] in mp)) mp[[a-1,b]]=[a,b];
+                // if(!([a+1,b] in mp)) mp[[a+1,b]]=[a,b];
+                // if(!([a,b-1] in mp)) mp[[a,b-1]]=[a,b];
+                // if(!([a,b+1] in mp)) mp[[a,b+1]]=[a,b];
                 
                 visited[a][b]=true;
+                
                 if(a==0 || b==0 || a==n-1 || b==m-1)
                 {
                     exit=[a,b]
                     s[a][b]='E';
-                    
+                    console.log('hi')
                     return true;
                 }
             }
@@ -160,7 +180,7 @@ function path(n,m,s){
     }
     
     bfs_monster(monsters,dp,s)
-    
+    // console.log(dp)
     var path=bfs_a(astart,bstart,dp,s,mp)
     
     if(path)
@@ -174,10 +194,17 @@ function path(n,m,s){
 }
 var n=5;
 var m=8;
+// var s=[
+//     '########',
+//     '#M..A..#',
+//     '#.#.M#.#',
+//     '#M#..#..',
+//     '#.######'
+//   ]
 var s=[
     '########',
     '#M..A..#',
-    '#.#.M#.#',
+    '#.#..#.#',
     '#M#..#..',
     '#.######'
   ]
