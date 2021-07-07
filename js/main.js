@@ -129,6 +129,7 @@ function setCellLava(i){
 function setCellStart(i){
     celltype[i]='start'
     element[i].style.backgroundColor=colors['start']
+    startCell=i
 }
 function setCellObstacle(i){
     celltype[i]='obstacle'
@@ -138,8 +139,16 @@ function setCellNormal(i){
     celltype[i]='normal'
     element[i].style.backgroundColor=colors['normal']
 }
+
 function ithbox(i){
-    if(celltype[i]=='normal'){
+    if(celltype[i]=='obstacle'){
+        
+        celltype[startCell]='normal'
+        element[startCell].style.backgroundColor=colors['normal']
+        console.log(startCell)
+        setCellStart(i)
+    }
+    else if(celltype[i]=='normal'){
         setCellLava(i)
     }
     else if(celltype[i]=='lava'){
@@ -147,7 +156,11 @@ function ithbox(i){
     }
     else if(celltype[i]=='obstacle'){
         setCellNormal(i)
-    }    
+    }
+    else if(celltype[i]=='start'){
+        setCellStart((i-1+element.length)%element.length)
+        setCellNormal(i)
+    }
 }
 function updatePathDoesNotExist(){
     var string="Path Does not exist"
