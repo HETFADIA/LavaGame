@@ -182,6 +182,7 @@ function ithbox(i) {
         setCellStart((i - 1 + element.length) % element.length)
         setCellNormal(i)
     }
+    simulate()
 }
 function updatePathDoesNotExist() {
     var string = "Path Does not exist"
