@@ -205,6 +205,7 @@ function rightclick(i) {
         element[startCell].style.backgroundColor = colors['normal']
         
         setCellStart(i)
+        simulate()
     }
 }
 function updatePathDoesNotExist() {
