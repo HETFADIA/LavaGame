@@ -9,6 +9,7 @@ diagonal=0
 element = document.getElementsByClassName("container");
 var TotalCells= element.length;
 var lengthOfTopRow= Math.floor(Math.sqrt(TotalCells));
+
 function updateColorDict(){
     colors={}
     colors['lava']='red'
@@ -76,6 +77,7 @@ function reloadPage(){
     history.go(0)
 }
 function reset(){
+    
     var n=+document.getElementById("length").value;
     manual()
     setlava(n,n)
@@ -86,7 +88,7 @@ function manual(){
     var n=+document.getElementById("length").value;
     
     for( var i=0;i<n*n;i++){
-        string+=`<div class="container" onclick="ithbox(${i})"></div>`
+        string+=`<div class="container" onclick="ithbox(${i})" ></div>`
     }
     for(var i=0;i<25;i++){
         string+="<br>";
@@ -102,6 +104,9 @@ function manual(){
     let division=(100/n-2*margin).toString();
 
     celltype={}
+    dp=[]
+    updateColorDict()
+    updateRepresentation()
     for(var i=0;i<n*n;i++){
         document.getElementsByClassName("container")[i].style.width=division+"%"
         document.getElementsByClassName("container")[i].style.height=0.9*division+"vh"
@@ -116,9 +121,33 @@ function manual(){
     percolatevar = document.getElementsByClassName("changetext");
     setStart(n,n)
 }
+function setCellLava(i){
+    celltype[i]='lava'
+    element[i].style.backgroundColor=colors['lava']
+
+}
+function setCellStart(i){
+    celltype[i]='start'
+    element[i].style.backgroundColor=colors['start']
+}
+function setCellObstacle(i){
+    celltype[i]='obstacle'
+    element[i].style.backgroundColor=colors['obstacle']
+}
+function setCellNormal(i){
+    celltype[i]='normal'
+    element[i].style.backgroundColor=colors['normal']
+}
 function ithbox(i){
-    
-    
+    if(celltype[i]=='normal'){
+        setCellLava(i)
+    }
+    else if(celltype[i]=='lava'){
+        setCellObstacle(i)
+    }
+    else if(celltype[i]=='obstacle'){
+        setCellNormal(i)
+    }    
 }
 function updatePathDoesNotExist(){
     var string="Path Does not exist"
@@ -161,8 +190,7 @@ function simulate(){
     }
 }
 function myFunction(){
-    updateColorDict()
-    updateRepresentation()
+    
     reset()
 }
 
