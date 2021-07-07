@@ -5,7 +5,7 @@ var celltype = {}
 var prevStrtCell = 0
 var startCell = 0
 dp = []
-diagonal = 0
+
 element = document.getElementsByClassName("container");
 var TotalCells = element.length;
 var lengthOfTopRow = Math.floor(Math.sqrt(TotalCells));
@@ -310,10 +310,12 @@ function bfs_a(x, y, dp, s, mp) {
     n = dp.length
     m = dp[0].length
     visited = matrix(n, m)
+    queuevisited={}
     lvl = 0
     q = new Queue()
 
     q.enqueue([x, y])
+    queuevisited[[x,y]]=1
     while (!q.empty()) {
         lvl++;
         t = q.length;
@@ -325,8 +327,12 @@ function bfs_a(x, y, dp, s, mp) {
                 dp[a][b] = min(dp[a][b], lvl);
 
                 for (var [a1, b1] of adj(a, b)) {
+                    
+                    if(!queuevisited[[a1,b1]]){
 
-                    q.enqueue([a1, b1])
+                        q.enqueue([a1, b1])
+                    }
+                    
                 }
 
                 for (var [a1, b1] of adj(a, b)) {
@@ -335,6 +341,7 @@ function bfs_a(x, y, dp, s, mp) {
 
                         mp[[a1, b1]] = [a, b]
                     }
+                    
                 }
 
                 visited[a][b] = true;
@@ -355,8 +362,12 @@ function findpath(mp, s, x, y) {
     a = exit[0]
     b = exit[1]
     v = [[a, b]]
-
+    var counter=0;
     while (a != x || b != y) {
+        counter++;
+        if(counter==1000){
+            return [[x,y],exit]
+        }
         temp = mp[[a, b]]
         p = temp[0]
         q = temp[1]
