@@ -1,6 +1,10 @@
+document.body.style.backgroundColor='lightblue'
 var colors={}
 var representation={}
 var celltype={}
+var prevStrtCell=0
+var startCell=0
+dp=[]
 diagonal=0
 element = document.getElementsByClassName("container");
 var TotalCells= element.length;
@@ -9,7 +13,7 @@ function updateColorDict(){
     colors['lava']='red'
     colors['lavapath']='rgb(200,10,0)'
     colors['start']='rgb(10,150,10)' //green
-    colors['obstacle']='blue'
+    colors['obstacle']='lightblue'
     colors['normal']='black'
     colors['path']='rgb(10,185,10)'
 }
@@ -38,6 +42,7 @@ function setStart(n,m){
     }
     randomIndex=gridIndex(y,x)
     celltype[randomIndex]='start'
+    startCell=randomIndex
     element[randomIndex].style.backgroundColor=colors['start']
 }
 function min(a,b){
@@ -66,54 +71,13 @@ function setObstacle(n,m){
     }
 }
 function reset(){
-
-}
-function ithbox(i){
-    
-}
-function updatePathDoesNotExist(){
-    var string="Path Does not exist"
-    document.getElementsByClassName('changetext')[0].innerHTML=string
-}
-function updatePath(ans){
-    var string="Path Found"
-    document.getElementsByClassName('changetext')[0].innerHTML=string
-    for(var [a1,b1] of ans){
-        var indexa=gridIndex(a1,b1)
-        if(celltype[indexa]=='normal')
-        element[indexa].style.backgroundColor=colors['path']
-    }
-}
-function simulate(){
-    m=lengthOfTopRow
-    n=element.length/m;
-    s=matrix(n,m,0)
-    for(var i=0;i<n;i++){
-        for(var j=0;j<m;j++){
-            temp=celltype[gridIndex(i,j)]
-            
-            s[i][j]=representation[temp]
-            
-        }
-    }
-    ans=path(n,m,s)
-    if(ans==-1){
-        updatePathDoesNotExist()
-    }
-    else{
-        updatePath(ans)
-    }
-}
-function myFunction(){
-    updateColorDict()
-    updateRepresentation()
     var string="";
     var n=+document.getElementById("length").value;
     
     for( var i=0;i<n*n;i++){
         string+=`<div class="container" onclick="ithbox(${i})"></div>`
     }
-    for(var i=0;i<32;i++){
+    for(var i=0;i<25;i++){
         string+="<br>";
     }
     document.getElementById("matrix").innerHTML=string;
@@ -129,18 +93,110 @@ function myFunction(){
 
     for(var i=0;i<n*n;i++){
         document.getElementsByClassName("container")[i].style.width=division+"%"
-        document.getElementsByClassName("container")[i].style.height=division+"vh"
+        document.getElementsByClassName("container")[i].style.height=0.9*division+"vh"
+        document.getElementsByClassName("container")[i].style.margin=margin+"%";
+        celltype[i]='normal'
+        element[i].style.backgroundColor='black'
+    }
+    element = document.getElementsByClassName("container");
+    TotalCells= element.length;
+    lengthOfTopRow= Math.floor(Math.sqrt(TotalCells));
+    
+    percolatevar = document.getElementsByClassName("changetext");
+    setStart(n,n)
+    setlava(n,n)
+    // setObstacle(n,n)
+}
+function manual(){
+    var string="";
+    var n=+document.getElementById("length").value;
+    
+    for( var i=0;i<n*n;i++){
+        string+=`<div class="container" onclick="ithbox(${i})"></div>`
+    }
+    for(var i=0;i<25;i++){
+        string+="<br>";
+    }
+    document.getElementById("matrix").innerHTML=string;
+    var widthofdevice=window.innerWidth
+    var setMargin=n<=(3.8*widthofdevice/100);//margin disappers above certain n for different devices
+ 
+    var margin=0
+    if(setMargin){
+        margin=100/(50*n)
+    }
+    let division=(100/n-2*margin).toString();
+
+
+    for(var i=0;i<n*n;i++){
+        document.getElementsByClassName("container")[i].style.width=division+"%"
+        document.getElementsByClassName("container")[i].style.height=0.9*division+"vh"
         document.getElementsByClassName("container")[i].style.margin=margin+"%";
         celltype[i]='normal'
     }
     element = document.getElementsByClassName("container");
     TotalCells= element.length;
     lengthOfTopRow= Math.floor(Math.sqrt(TotalCells));
-    // using percolatevar i have selected all the boxes in which the text changes
+    
     percolatevar = document.getElementsByClassName("changetext");
     setStart(n,n)
-    setlava(n,n)
-    setObstacle(n,n)
+}
+function ithbox(i){
+    
+    
+}
+function updatePathDoesNotExist(){
+    var string="Path Does not exist"
+    document.getElementsByClassName('changetext')[0].innerHTML=string
+}
+function updatePath(ans,n,m){
+    var string="Path Found"
+    document.getElementsByClassName('changetext')[0].innerHTML=string
+    for(var [a1,b1] of ans){
+        var indexa=gridIndex(a1,b1)
+        if(celltype[indexa]=='normal'){
+            celltype[indexa]='path'
+            element[indexa].style.backgroundColor=colors['path']
+        }
+    }
+    // for(var i=0;i<n;i++){
+    //     for(var j=0;j<m;j++){
+    //         k=gridIndex(i,j)
+    //         if(dp[i][j]<=ans.length && celltype[k]=='normal'){
+    //             celltype[k]='lavapath'
+    //             element[k].style.backgroundColor=colors['lavapath']
+    //         }
+    //     }
+    // }
+    
+
+}
+function simulate(){
+    m=lengthOfTopRow
+    n=element.length/m;
+    s=matrix(n,m,0)
+    for(var i=0;i<n;i++){
+        for(var j=0;j<m;j++){
+            temp=celltype[gridIndex(i,j)]
+            
+            s[i][j]=representation[temp]
+            
+        }
+    }
+    ans=path(n,m,s)
+    
+    if(ans==-1){
+        updatePathDoesNotExist()
+    }
+    else{
+        updatePath(ans,n,m)
+
+    }
+}
+function myFunction(){
+    updateColorDict()
+    updateRepresentation()
+    reset()
 }
 
 
@@ -231,10 +287,6 @@ function bfs_monster(monsters,dp,s){
                     
                     if(0<=a1 && a1<n && 0<=b1 && b1<m && !visited[a1][b1] && s[a1][b1]!='#') q.enqueue([a1,b1])
                 }
-                // if(a-1>=0 && !visited[a-1][b] && s[a-1][b]!='#') q.enqueue([a-1,b]);
-                // if(b-1>=0 && !visited[a][b-1] && s[a][b-1]!='#') q.enqueue([a,b-1]);
-                // if(a+1<n && !visited[a+1][b] && s[a+1][b]!='#') q.enqueue([a+1,b]);
-                // if(b+1<m && !visited[a][b+1] && s[a][b+1]!='#') q.enqueue([a,b+1]);
             }
         }
     }
@@ -263,10 +315,6 @@ function bfs_a(x,y,dp,s,mp){
                     
                     q.enqueue([a1,b1])
                 }
-                // q.enqueue([a-1,b]);
-                // q.enqueue([a,b-1]);
-                // q.enqueue([a+1,b]);
-                // q.enqueue([a,b+1]);
                 
                 for(var [a1,b1] of adj(a,b)){
                     
@@ -275,10 +323,6 @@ function bfs_a(x,y,dp,s,mp){
                         mp[[a1,b1]]=[a,b]
                     }
                 }
-                // if(!([a-1,b] in mp)) mp[[a-1,b]]=[a,b];
-                // if(!([a+1,b] in mp)) mp[[a+1,b]]=[a,b];
-                // if(!([a,b-1] in mp)) mp[[a,b-1]]=[a,b];
-                // if(!([a,b+1] in mp)) mp[[a,b+1]]=[a,b];
                 
                 visited[a][b]=true;
                 
