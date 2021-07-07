@@ -97,7 +97,7 @@ function manual() {
     var n = +document.getElementById("length").value;
 
     for (var i = 0; i < n * n; i++) {
-        string += `<div class="container" onclick="ithbox(${i})" ></div>`
+        string += `<div class="container" onclick="ithbox(${i})" onmousedown="rightclick(${i})"></div>`
     }
     for (var i = 0; i < 25; i++) {
         string += "<br>";
@@ -184,6 +184,28 @@ function ithbox(i) {
         setCellNormal(i)
     }
     simulate()
+}
+function rightclick(i) {
+    var rightclick;
+    var e = window.event;
+    if (e.which) rightclick = (e.which == 3);
+    else if (e.button) rightclick = (e.button == 2);
+    if(rightclick){
+        var pathIndices=[]
+        if('path' in reverseCellType){
+            for(var i1 of reverseCellType['path']){
+                pathIndices.push(i1)
+            }
+        }
+        delete reverseCellType['path']
+        for(var j of pathIndices){
+            setCellNormal(j)
+        }
+        celltype[startCell] = 'normal'
+        element[startCell].style.backgroundColor = colors['normal']
+        
+        setCellStart(i)
+    }
 }
 function updatePathDoesNotExist() {
     var string = "Path Does not exist"
