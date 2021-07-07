@@ -10,6 +10,7 @@ element = document.getElementsByClassName("container");
 var TotalCells= element.length;
 var lengthOfTopRow= Math.floor(Math.sqrt(TotalCells));
 function updateColorDict(){
+    colors={}
     colors['lava']='red'
     colors['lavapath']='rgb(200,10,0)'
     colors['start']='rgb(10,150,10)' //green
@@ -18,6 +19,7 @@ function updateColorDict(){
     colors['path']='rgb(10,185,10)'
 }
 function updateRepresentation(){
+    representation={}
     representation['lava']='M'
     representation['start']='A'
     representation['obstacle']='#'
@@ -70,40 +72,12 @@ function setObstacle(n,m){
         }
     }
 }
+function reloadPage(){
+    history.go(0)
+}
 function reset(){
-    var string="";
     var n=+document.getElementById("length").value;
-    
-    for( var i=0;i<n*n;i++){
-        string+=`<div class="container" onclick="ithbox(${i})"></div>`
-    }
-    for(var i=0;i<25;i++){
-        string+="<br>";
-    }
-    document.getElementById("matrix").innerHTML=string;
-    var widthofdevice=window.innerWidth
-    var setMargin=n<=(3.8*widthofdevice/100);//margin disappers above certain n for different devices
- 
-    var margin=0
-    if(setMargin){
-        margin=100/(50*n)
-    }
-    let division=(100/n-2*margin).toString();
-
-
-    for(var i=0;i<n*n;i++){
-        document.getElementsByClassName("container")[i].style.width=division+"%"
-        document.getElementsByClassName("container")[i].style.height=0.9*division+"vh"
-        document.getElementsByClassName("container")[i].style.margin=margin+"%";
-        celltype[i]='normal'
-        element[i].style.backgroundColor='black'
-    }
-    element = document.getElementsByClassName("container");
-    TotalCells= element.length;
-    lengthOfTopRow= Math.floor(Math.sqrt(TotalCells));
-    
-    percolatevar = document.getElementsByClassName("changetext");
-    setStart(n,n)
+    manual()
     setlava(n,n)
     // setObstacle(n,n)
 }
@@ -127,12 +101,13 @@ function manual(){
     }
     let division=(100/n-2*margin).toString();
 
-
+    celltype={}
     for(var i=0;i<n*n;i++){
         document.getElementsByClassName("container")[i].style.width=division+"%"
         document.getElementsByClassName("container")[i].style.height=0.9*division+"vh"
         document.getElementsByClassName("container")[i].style.margin=margin+"%";
         celltype[i]='normal'
+        element[i].style.backgroundColor='black'
     }
     element = document.getElementsByClassName("container");
     TotalCells= element.length;
@@ -159,15 +134,7 @@ function updatePath(ans,n,m){
             element[indexa].style.backgroundColor=colors['path']
         }
     }
-    // for(var i=0;i<n;i++){
-    //     for(var j=0;j<m;j++){
-    //         k=gridIndex(i,j)
-    //         if(dp[i][j]<=ans.length && celltype[k]=='normal'){
-    //             celltype[k]='lavapath'
-    //             element[k].style.backgroundColor=colors['lavapath']
-    //         }
-    //     }
-    // }
+    
     
 
 }
