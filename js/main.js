@@ -83,7 +83,7 @@ function reset() {
         history.go(0)
         return;
     }
-    
+    mp={}
     var n = +document.getElementById("length").value;
     manual()
     setlava(n, n)
@@ -187,6 +187,7 @@ function updatePath(ans, n, m) {
 
 }
 function simulate() {
+    mp={}
     m = lengthOfTopRow
     n = element.length / m;
     s = matrix(n, m, 0)
@@ -329,8 +330,10 @@ function bfs_a(x, y, dp, s, mp) {
                 for (var [a1, b1] of adj(a, b)) {
                     
                     if(!queuevisited[[a1,b1]]){
+                        if(0 <= a1 && a1 < n && 0 <= b1 && b1 < m){
 
-                        q.enqueue([a1, b1])
+                            q.enqueue([a1, b1])
+                        }
                     }
                     
                 }
@@ -338,8 +341,10 @@ function bfs_a(x, y, dp, s, mp) {
                 for (var [a1, b1] of adj(a, b)) {
 
                     if (!([a1, b1] in mp)) {
+                        if(0 <= a1 && a1 < n && 0 <= b1 && b1 < m){
 
-                        mp[[a1, b1]] = [a, b]
+                            mp[[a1, b1]] = [a, b]
+                        }
                     }
                     
                 }
