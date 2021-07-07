@@ -2,14 +2,15 @@ document.body.style.backgroundColor = 'lightblue'
 var colors = {}
 var representation = {}
 var celltype = {}
+var reverseCellType={}
 var prevStrtCell = 0
 var startCell = 0
-dp = []
+var dp = []
 
-element = document.getElementsByClassName("container");
+var element = document.getElementsByClassName("container");
 var TotalCells = element.length;
 var lengthOfTopRow = Math.floor(Math.sqrt(TotalCells));
-var resetPage = 0
+
 
 function updateColorDict() {
     colors = {}
@@ -46,6 +47,12 @@ function setStart(n, m) {
     }
     randomIndex = gridIndex(y, x)
     celltype[randomIndex] = 'start'
+    if(!('start' in reverseCellType)){
+        reverseCellType['start']=new Set()
+    }
+    
+    reverseCellType['start'].add(randomIndex)
+    
     startCell = randomIndex
     element[randomIndex].style.backgroundColor = colors['start']
 }
@@ -78,11 +85,7 @@ function reloadPage() {
     history.go(0)
 }
 function reset() {
-    resetPage++;
-    if(resetPage==2){
-        history.go(0)
-        return;
-    }
+    reverseCellType={}
     mp={}
     var n = +document.getElementById("length").value;
     manual()
@@ -136,6 +139,8 @@ function setCellStart(i) {
     celltype[i] = 'start'
     element[i].style.backgroundColor = colors['start']
     startCell = i
+    reverseCellType['start']=new Set()
+    reverseCellType['start'].add(startCell)
 }
 function setCellObstacle(i) {
     celltype[i] = 'obstacle'
@@ -147,11 +152,21 @@ function setCellNormal(i) {
 }
 
 function ithbox(i) {
+    var pathIndices=[]
+    if('path' in reverseCellType){
+        for(var i1 of reverseCellType['path']){
+            pathIndices.push(i1)
+        }
+    }
+    delete reverseCellType['path']
+    for(var j of pathIndices){
+        setCellNormal(j)
+    }
     if (celltype[i] == 'obstacle') {
 
         celltype[startCell] = 'normal'
         element[startCell].style.backgroundColor = colors['normal']
-        console.log(startCell)
+        
         setCellStart(i)
     }
     else if (celltype[i] == 'normal') {
@@ -179,6 +194,10 @@ function updatePath(ans, n, m) {
         var indexa = gridIndex(a1, b1)
         if (celltype[indexa] == 'normal') {
             celltype[indexa] = 'path'
+            if(!('path' in reverseCellType)){
+                reverseCellType['path']=new Set()
+            }
+            reverseCellType['path'].add(indexa)
             element[indexa].style.backgroundColor = colors['path']
         }
     }
@@ -188,6 +207,16 @@ function updatePath(ans, n, m) {
 }
 function simulate() {
     mp={}
+    var pathIndices=[]
+    if('path' in reverseCellType){
+        for(var i of reverseCellType['path']){
+            pathIndices.push(i)
+        }
+    }
+    delete reverseCellType['path']
+    for(var j of pathIndices){
+        setCellNormal(j)
+    }
     m = lengthOfTopRow
     n = element.length / m;
     s = matrix(n, m, 0)

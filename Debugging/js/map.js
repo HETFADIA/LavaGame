@@ -16,3 +16,6 @@ console.log([2,3] in mp)
 console.log([2,4] in mp)
 console.log([3,4] in mp)
 console.log([2,2] in mp)
+var m={}
+m[2]={}
+m[2]
