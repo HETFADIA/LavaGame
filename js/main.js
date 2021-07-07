@@ -129,6 +129,7 @@ function manual() {
 
     percolatevar = document.getElementsByClassName("changetext");
     setStart(n, n)
+    simulate()
 }
 function setCellLava(i) {
     celltype[i] = 'lava'
