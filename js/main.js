@@ -20,6 +20,8 @@ function updateColorDict() {
     colors['obstacle'] = 'lightblue'
     colors['normal'] = 'black'
     colors['path'] = 'rgb(10,185,10)'
+    colors['LavaCapturedNormal']='#880000'
+    colors['LavaCaptureStart']='#'
 }
 function updateRepresentation() {
     representation = {}
@@ -385,7 +387,7 @@ function bfs_a(x, y, dp, s, mp) {
             a = arr[0]
             b = arr[1]
             if (a >= 0 && b >= 0 && a < n && b < m && !visited[a][b] && dp[a][b] > lvl && s[a][b] != '#') {
-                dp[a][b] = min(dp[a][b], lvl);
+                // dp[a][b] = min(dp[a][b], lvl);
 
                 for (var [a1, b1] of adj(a, b)) {
                     
