@@ -38,6 +38,9 @@ function random(a, b) {
 function gridIndex(i, j) {
     return i * lengthOfTopRow + j;
 }
+function reverseGridIndex(indexa){
+    return [int(indexa/lengthOfTopRow),indexa%lengthOfTopRow]
+}
 function setStart(n, m) {
     var x = random(0, m)
     var y = random(0, n)
@@ -60,6 +63,28 @@ function setStart(n, m) {
 }
 function min(a, b) {
     return Math.min(a, b)
+}
+function int(a,b=undefined){
+    if(b==undefined){
+        return parseInt(a);
+    }
+    else if(b==0){
+        
+        if(a.slice(0,2)=='0b'){
+            return parseInt(a.slice(2),2)
+        }
+        else if(a.slice(0,2)=="0x"){
+            return parseInt(a.slice(2),16)
+        }
+        else if(a.slice(0,2)=="0o"){
+            console.log("oct")
+            return parseInt(a.slice(2),8)
+        }
+        return parseInt(a,10)
+    }
+    else{
+        return parseInt(a,b);
+    }
 }
 function setlava(n, m) {
     product = n * m;
@@ -90,12 +115,12 @@ function reset() {
     reverseCellType={}
     mp={}
     var n = +document.getElementById("length").value;
-    manual()
+    manual(0)
     setlava(n, n)
     // setObstacle(n,n)
     simulate()
 }
-function manual() {
+function manual(run=1) {
     var string = "";
     var n = +document.getElementById("length").value;
 
@@ -132,7 +157,9 @@ function manual() {
 
     percolatevar = document.getElementsByClassName("changetext");
     setStart(n, n)
-    
+    if(run){
+        simulate()
+    }
 }
 function setCellLava(i) {
     celltype[i] = 'lava'
