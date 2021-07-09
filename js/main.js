@@ -91,6 +91,7 @@ function reset() {
     manual()
     setlava(n, n)
     // setObstacle(n,n)
+    simulate()
 }
 function manual() {
     var string = "";
@@ -129,7 +130,7 @@ function manual() {
 
     percolatevar = document.getElementsByClassName("changetext");
     setStart(n, n)
-    simulate()
+    
 }
 function setCellLava(i) {
     celltype[i] = 'lava'
@@ -244,7 +245,8 @@ function simulate() {
     }
     m = lengthOfTopRow
     n = element.length / m;
-    s = matrix(n, m, 0)
+    s = matrix(n, m)
+    
     for (var i = 0; i < n; i++) {
         for (var j = 0; j < m; j++) {
             temp = celltype[gridIndex(i, j)]
@@ -253,6 +255,7 @@ function simulate() {
 
         }
     }
+    
     ans = path(n, m, s)
 
     if (ans == -1) {
@@ -322,6 +325,7 @@ function matrix(n, m, initialize = 0) {
             arr[i].push(initialize)
         }
     }
+    
     return arr;
 }
 diagonal = 1
@@ -336,9 +340,10 @@ function bfs_monster(monsters, dp, s) {
     var q = new Queue()
     lvl = 0
     for (var i of monsters) {
-
+        
         q.enqueue(i)
     }
+    
     while (!q.empty()) {
         lvl++;
         t = q.length;
@@ -359,6 +364,7 @@ function bfs_monster(monsters, dp, s) {
             }
         }
     }
+    
 
 }
 function bfs_a(x, y, dp, s, mp) {
